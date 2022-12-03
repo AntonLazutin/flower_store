@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+{% block content%}
+    {% for object in object_list %}
+    <div class="card" style="width: 18rem; margin: 30px; display:inline-block;">
+        <img src="Buket-iz-pionov-Sara-Bernar-rozovye-27sh--451x451.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{object}}</h5>
+          <p class="card-text">Цена: {{object.price}}</p>
+          <p class="card-text">Количество: {{object.quantity}}</p>
+          <a href="{% url 'make_order' object.id %}" class="btn btn-primary">Заказать</a>
+        </div>
+      </div>
+    {% endfor %}
+    <br>
+    {% if user.is_staff%}
+    <a href="#" class="btn btn-primary" style="margin: 30px;">Добавить цветы</a>
+    {% endif %}
+{%endblock%}

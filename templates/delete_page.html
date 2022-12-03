@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+    <form method="post">{% csrf_token %}
+        <p>Вы уверены, что хотите удалить "{{ object }}"?</p>
+        {% bootstrap_form form %}
+        {% bootstrap_button "Удалить" button_type="submit" button_class="btn-danger" %}
+    </form>
+{% endblock content%}

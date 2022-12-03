@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+{% block content%}
+    {% for object in object_list %}
+    <div class="card" style="width: 18rem; margin: 30px; display:inline-block;">
+        <div class="card-body">
+          <h5 class="card-title">{{object}}</h5>
+          <p class="card-text">Пользователь: {{object.customer}}</p>
+          <p class="card-text">Цветы: {{object.flower.name}}</p>
+          <p class="card-text">Количество: {{object.quantity}}</p>
+          <p class="card-text">Полная стоимость: {{object.quantity}}</p>
+          <form method="POST">
+            {%csrf_token%}
+            <a href="{% url 'process_order' object.id %}" class="btn btn-primary" type="submit">Заказ выполнен</a>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+{%endblock%}
