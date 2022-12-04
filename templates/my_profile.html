@@ -2,13 +2,27 @@
 
 
 {% block content%}
+    <h1>Избранное: </h1>
+    {% for item in favorite_items %}
+    <div class="card" style="width: 18rem; margin: 30px; display:inline-block;">
+        <div class="card-body">
+          <h5 class="card-title">{{item}}</h5>
+          <p class="card-text">Цветы: {{item.item.name}}</p>
+          <p class="card-text">Цена: {{item.item.price}}</p>
+          <p class="card-text">Количество: {{item.item.quantity}}</p>
+          <a href="{% url 'make_order' item.item.id %}" class="btn btn-primary">Заказать</a>
+        </div>
+      </div>
+    {% endfor %}
+    <br>
+    <h1>Заказы: </h1>
     {% for order in orders %}
     <div class="card" style="width: 18rem; margin: 30px; display:inline-block;">
         <div class="card-body">
           <h5 class="card-title">{{order}}</h5>
           <p class="card-text">Цветы: {{order.flower.name}}</p>
           <p class="card-text">Количество: {{order.quantity}}</p>
-          <p class="card-text">Полная стоимость: {{order.quantity}}</p>
+          <p class="card-text">Полная стоимость: {{order.get_total_price}}</p>
         </div>
       </div>
     {% endfor %}

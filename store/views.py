@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import View, ListView, FormView, UpdateView
+from django.views.generic import View, ListView, FormView, UpdateView, DeleteView
 from .models import *
 from .forms import *
 from django.urls import reverse, reverse_lazy
@@ -66,6 +66,21 @@ class AddFlower(FormView):
         return super().form_valid(form)
 
 
+class UpdateFlower(UpdateView):
+    model = Flower
+    template_name: str = "update_page.html"
+    fields = [
+        'name', 'price', 'quantity'
+    ]
+    success_url = reverse_lazy('flowers') 
+
+
+class DeleteFlower(DeleteView):
+    model = Flower
+    template_name: str = 'delete_page.html'
+    success_url = reverse_lazy('flowers') 
+
+
 class MakeOrder(FormView):
     template_name = "add_page.html"
     form_class = OrderForm
@@ -82,6 +97,14 @@ class MakeOrder(FormView):
         print(Flower.objects.get(pk=self.kwargs['pk']))
         order.save()
         return super().form_valid(form)
+
+
+class UpdateOrder():
+    pass
+
+
+class DeleteOrder():
+    pass
 
 
 class AdminOrderView(UserPassesTestMixin, ListView):
@@ -102,24 +125,19 @@ class ProcessOrder(UserPassesTestMixin, View):
         return HttpResponseRedirect(reverse('order_list')) 
 
 
+class AddToFavorite(View):
+
+    def get(self, *args, **kwargs):
+        favorite = Favorite.objects.get_or_create(customer=self.request.user)[0]
+        favorite_item = FavioriteItem.objects.create(favorite=favorite, item = Flower.objects.get(id=self.kwargs['pk']))
+        return HttpResponseRedirect(reverse('profile')) 
+
+
 class UserProfile(View):
     template_name = "my_profile.html"
 
     def get(self, request, *args, **kwargs):
+        favorite = Favorite.objects.get_or_create(customer=request.user)[0]
+        favorites = favorite.favorite_items.all()
         orders = Order.objects.filter(customer=request.user)
-        return render(request, self.template_name, {'orders': orders})
-
-    # def post(self, request, *args, **kwargs):
-    #     form = self.form_class(request.POST)
-    #     if form.is_valid():
-    #         username = request.POST.get('username')
-    #         password = request.POST.get('password')
-    #         user = authenticate(username=username, password=password)
-    #         if user is not None and user.is_active:
-    #             login(request, user)
-    #             return HttpResponseRedirect(reverse('index'))
-    #         else:
-    #             HttpResponse('Invalid account')
-    #     return render(request, self.template_name, {'form': form})
-
-
+        return render(request, self.template_name, {'orders': orders, 'favorite_items': favorites})

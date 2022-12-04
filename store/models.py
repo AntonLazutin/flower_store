@@ -17,8 +17,6 @@ class Flower(models.Model):
         self.save()
 
 
-
-
 class Order(models.Model):
     is_cleaned = False
     customer = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
@@ -31,18 +29,46 @@ class Order(models.Model):
     def get_total_price(self):
         return self.quantity*self.flower.price
 
-    # def clean(self):
-    #     if self.quantity > self.flower.quantity:
-    #         raise ValidationError("Количество не может превышать количество цветов!")
-    #     else:
-    #         self.is_cleaned=True
-
-    # def save(self, *args, **kwargs):
-    #     if not self.is_cleaned:
-    #         self.full_clean()
-    #     super(Order, self).save(*args, **kwargs)
-
     def execute_order(self):
         self.flower.reduce_quantity(self.quantity)
         self.flower.save()
         self.delete()
+
+
+class Favorite(models.Model):
+    customer = models.ForeignKey(User, related_name='favorites', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Избранное пользователя {self.customer.username}"
+
+
+class FavioriteItem(models.Model):
+    favorite = models.ForeignKey(Favorite, related_name='favorite_items', on_delete=models.CASCADE)
+    item = models.ForeignKey(Flower, related_name='favorite_items', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.item.name
+        # def clean(self):
+#     if self.quantity > self.flower.quantity:
+#         raise ValidationError("Количество не может превышать количество цветов!")
+#     else:
+#         self.is_cleaned=True
+
+# def save(self, *args, **kwargs):
+#     if not self.is_cleaned:
+#         self.full_clean()
+#     super(Order, self).save(*args, **kwargs)
+
+# Пион
+# Василёк
+# Эустома
+# Гортензия
+# Хризантема
+# Гипсофила
+# Роза
+# Тюльпан
+# Ромашка
+# Гвоздика
+# Нарцисс
+# Орхидея 
+# Лилия

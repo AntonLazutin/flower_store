@@ -4,12 +4,18 @@
 {% block content%}
     {% for object in object_list %}
     <div class="card" style="width: 18rem; margin: 30px; display:inline-block;">
-        <img src="Buket-iz-pionov-Sara-Bernar-rozovye-27sh--451x451.jpg" class="card-img-top" alt="...">
+        {% comment %} <img src="Buket-iz-pionov-Sara-Bernar-rozovye-27sh--451x451.jpg" class="card-img-top" alt="..."> {% endcomment %}
         <div class="card-body">
           <h5 class="card-title">{{object}}</h5>
           <p class="card-text">Цена: {{object.price}}</p>
           <p class="card-text">Количество: {{object.quantity}}</p>
+          {% if user.is_staff%}
+          <a href="{% url 'update_flower' object.id %}" class="btn btn-success">Обновить</a>
+          <a href="{% url 'delete_flower' object.id %}" class="btn btn-danger">Удалить</a>
+          {% else %}
           <a href="{% url 'make_order' object.id %}" class="btn btn-primary">Заказать</a>
+          <a href="{% url 'add_to_favorite' object.id %}" class="btn btn-primary">Добавить в избранное</a>
+          {% endif%}
         </div>
       </div>
     {% endfor %}
